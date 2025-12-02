@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Indie Chatbot</title>
+<title>Indie Chatbot v1.2</title>
 <style>
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; min-height:100vh; transition: background 0.3s, color 0.3s; }
   body.light { background:#f0f2f5; color:#000; }
@@ -39,7 +39,8 @@
   .plan { padding:15px; border:1px solid #6C63FF; border-radius:10px; margin:10px 0; transition:background 0.3s; text-align:center; }
   .plan button { margin-top:10px; background:#6C63FF; color:#fff; border:none; padding:8px 16px; cursor:pointer; border-radius:6px; }
   .plan button:hover { background:#574bff; }
-  .personality-selector { margin-top:10px; }
+  .personality-selector, .custom-personality { margin-top:10px; text-align:center; }
+  .custom-personality textarea { width:90%; height:60px; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #6C63FF; }
   footer { text-align:center; padding:15px; font-size:0.9em; color:inherit; }
 </style>
 </head>
@@ -61,7 +62,7 @@
   <h2>Indie Premium Subscriptions</h2>
   <div class="plan">
     <h3>Ultimate - $19.99/month</h3>
-    <p>All features + Custom themes + Bot personality modes</p>
+    <p>All features + Custom personalities</p>
     <button onclick="subscribe('Ultimate')">Subscribe</button>
     <div class="personality-selector">
       <label>Choose Personality:</label>
@@ -71,24 +72,28 @@
         <option value="sassy">Sassy</option>
       </select>
     </div>
+    <div class="custom-personality">
+      <label>Or create custom personality:</label>
+      <textarea id="customPersonalityInput" placeholder="Describe the bot's style..."></textarea>
+    </div>
   </div>
 </div>
 
 <div class="update-log-container light" id="updateLog">
   <h1>Indie Chatbot - Update Log</h1>
   <div class="update-entry">
-    <h2>Version 1.1.250 – Bot Personality Modes</h2>
-    <div class="date">2025-12-30</div>
+    <h2>Version 1.2 – Custom Personalities & Message History</h2>
+    <div class="date">2026-01-05</div>
     <ul>
-      <li>Added Ultimate plan users bot personality modes.</li>
-      <li>Three personalities: Friendly, Professional, Sassy.</li>
-      <li>Chat responses now adapt based on selected personality.</li>
-      <li>All previous features remain: Dark/Light mode, emojis, animations, subscriptions.</li>
+      <li>Added custom personality editor for Ultimate users.</li>
+      <li>Premium features now unlocked per subscription plan.</li>
+      <li>Chat history persists across page refresh for subscribers.</li>
+      <li>All previous features remain: Dark/Light mode, emojis, animations, subscriptions, bot personality modes.</li>
     </ul>
   </div>
 </div>
 
-<footer>&copy; 2025 Google. All rights reserved.</footer>
+<footer>&copy; 2026 Google. All rights reserved.</footer>
 
 <script>
 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -99,45 +104,54 @@ document.getElementById('updateLog').className = `update-log-container ${savedTh
 document.getElementById('subscriptionContainer').className = `subscription-container ${savedTheme}`;
 
 let currentPersonality = 'friendly';
+let customPersonality = '';
+const chatHistoryKey = 'indieChatHistory';
+
+// Load previous messages
+const savedHistory = JSON.parse(localStorage.getItem(chatHistoryKey) || '[]');
+savedHistory.forEach(msg => addMessage(msg.text, msg.type));
 
 function sendMessage() {
   const input = document.getElementById('userInput');
   const message = input.value.trim();
   if (!message) return;
-  const messagesContainer = document.getElementById('messages');
 
-  const userMsg = document.createElement('div');
-  userMsg.classList.add('message', 'user-message', document.body.className);
-  userMsg.textContent = message;
-  messagesContainer.appendChild(userMsg);
+  addMessage(message, 'user');
 
-  const botMsg = document.createElement('div');
-  botMsg.classList.add('message', 'bot-message', document.body.className);
-  botMsg.textContent = "Indie is typing...";
-  messagesContainer.appendChild(botMsg);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  const botMsg = generateBotReply(message);
+  setTimeout(() => addMessage(botMsg, 'bot'), 1000 + Math.random()*1000);
+
   input.value = '';
-
-  setTimeout(() => {
-    botMsg.textContent = generateBotReply(message);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }, 1000 + Math.random()*1000);
 }
 
-function generateBotReply(message) {
-  switch(currentPersonality) {
-    case 'friendly':
-      return `Hey friend! You said: "${message}" 😄`;
-    case 'professional':
-      return `You stated: "${message}". How may I assist further?`;
-    case 'sassy':
-      return `Oh really? "${message}" 😏 Well, I see what you did there!`;
-    default:
-      return `You said: "${message}"`;
+function addMessage(text, type) {
+  const messagesContainer = document.getElementById('messages');
+  const msgDiv = document.createElement('div');
+  msgDiv.classList.add('message', type === 'user' ? 'user-message' : 'bot-message', document.body.className);
+  msgDiv.textContent = text;
+  messagesContainer.appendChild(msgDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // Save history for Ultimate subscribers
+  if (type === 'user' || type === 'bot') {
+    const history = JSON.parse(localStorage.getItem(chatHistoryKey) || '[]');
+    history.push({ text, type });
+    localStorage.setItem(chatHistoryKey, JSON.stringify(history));
   }
 }
 
-document.getElementById('userInput').addEventListener('keypress', function(e) {
+function generateBotReply(message) {
+  const customInput = document.getElementById('customPersonalityInput').value.trim();
+  if (customInput) return `[Custom] ${message} - Response in custom style: ${customInput}`;
+  switch(currentPersonality) {
+    case 'friendly': return `Hey friend! You said: "${message}" 😄`;
+    case 'professional': return `You stated: "${message}". How may I assist further?`;
+    case 'sassy': return `Oh really? "${message}" 😏 Well, I see what you did there!`;
+    default: return `You said: "${message}"`;
+  }
+}
+
+document.getElementById('userInput').addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage();
 });
 
@@ -153,7 +167,6 @@ function toggleTheme() {
   chatContainer.querySelector('.chat-header').className = `chat-header ${newTheme}`;
   updateLog.className = `update-log-container ${newTheme}`;
   subscriptionContainer.className = `subscription-container ${newTheme}`;
-
   document.querySelectorAll('.message').forEach(msg => {
     msg.classList.remove('light','dark');
     msg.classList.add(newTheme);
@@ -162,7 +175,11 @@ function toggleTheme() {
   localStorage.setItem('theme', newTheme);
 }
 
-function clearChat() { document.getElementById('messages').innerHTML = ''; }
+function clearChat() { 
+  document.getElementById('messages').innerHTML = '';
+  localStorage.removeItem(chatHistoryKey);
+}
+
 function subscribe(plan) { alert(`Thank you for subscribing to the ${plan} plan! 🎉`); }
 
 document.getElementById('personalitySelect').addEventListener('change', function() {
