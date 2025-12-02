@@ -16,7 +16,6 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  /* Themes */
   body.light { background: #f0f2f5; color: #000; }
   body.dark { background: #1e1e2f; color: #f0f0f0; }
 
@@ -50,14 +49,7 @@
   .chat-header.light { background: #6C63FF; color: #fff; }
   .chat-header.dark { background: #4444aa; color: #fff; }
 
-  .chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
 
   .message {
     max-width: 70%;
@@ -70,9 +62,7 @@
     animation: fadeInUp 0.3s forwards;
   }
 
-  @keyframes fadeInUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
   .user-message.light { background: #6C63FF; color: #fff; }
   .user-message.dark { background: #574bff; color: #fff; }
@@ -111,6 +101,25 @@
   .update-entry ul { margin: 0; padding-left: 20px; }
   .update-entry li { margin-bottom: 5px; }
 
+  /* Subscription Section */
+  .subscription-container {
+    width: 90%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: background 0.3s, color 0.3s;
+  }
+  .subscription-container.dark { background: #2c2c3a; color: #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+
+  .subscription-container h2 { color: #6C63FF; margin-bottom: 15px; }
+  .plan { padding: 15px; border: 1px solid #6C63FF; border-radius: 10px; margin: 10px 0; transition: background 0.3s; }
+  .plan button { margin-top: 10px; background: #6C63FF; color: #fff; border: none; padding: 8px 16px; cursor: pointer; border-radius: 6px; }
+  .plan button:hover { background: #574bff; }
+
   footer { text-align: center; padding: 15px; font-size: 0.9em; color: inherit; }
 
 </style>
@@ -131,18 +140,36 @@
   </div>
 </div>
 
+<!-- Subscription Plans -->
+<div class="subscription-container light" id="subscriptionContainer">
+  <h2>Indie Premium Subscriptions</h2>
+  <div class="plan">
+    <h3>Basic - $4.99/month</h3>
+    <p>Emoji support, Dark/Light mode, 100 messages/day</p>
+    <button onclick="subscribe('Basic')">Subscribe</button>
+  </div>
+  <div class="plan">
+    <h3>Pro - $9.99/month</h3>
+    <p>Unlimited messages, Typing animation, Priority support</p>
+    <button onclick="subscribe('Pro')">Subscribe</button>
+  </div>
+  <div class="plan">
+    <h3>Ultimate - $19.99/month</h3>
+    <p>All features + Custom themes + Bot personality modes</p>
+    <button onclick="subscribe('Ultimate')">Subscribe</button>
+  </div>
+</div>
+
 <!-- Update Log -->
 <div class="update-log-container light" id="updateLog">
   <h1>Indie Chatbot - Update Log</h1>
   <div class="update-entry">
-    <h2>Version 1.1.97 – Fun Enhancements!</h2>
-    <div class="date">2025-12-20</div>
+    <h2>Version 1.1.182 – Paid Subscriptions</h2>
+    <div class="date">2025-12-25</div>
     <ul>
-      <li>Added typing animation for bot messages.</li>
-      <li>Emoji support in chat messages. 🎉🤖</li>
-      <li>Floating “Clear Chat” button to reset conversation.</li>
-      <li>Dark/Light mode persists across sessions.</li>
-      <li>Subtle animations on new messages for liveliness.</li>
+      <li>Added visual subscription plans: Basic, Pro, Ultimate.</li>
+      <li>Subscribe buttons with simple confirmation popup.</li>
+      <li>All previous features remain: Dark/Light mode, emojis, chat, update log, animations.</li>
     </ul>
   </div>
 </div>
@@ -151,27 +178,25 @@
 <footer>&copy; 2025 Google. All rights reserved.</footer>
 
 <script>
-  // Load theme from localStorage
+  // Load theme
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.body.className = savedTheme;
   document.getElementById('chatContainer').className = `chat-container ${savedTheme}`;
   document.getElementById('chatContainer').querySelector('.chat-header').className = `chat-header ${savedTheme}`;
   document.getElementById('updateLog').className = `update-log-container ${savedTheme}`;
+  document.getElementById('subscriptionContainer').className = `subscription-container ${savedTheme}`;
 
   function sendMessage() {
     const input = document.getElementById('userInput');
     const message = input.value.trim();
     if (!message) return;
-
     const messagesContainer = document.getElementById('messages');
 
-    // User message
     const userMsg = document.createElement('div');
     userMsg.classList.add('message', 'user-message', document.body.className);
     userMsg.textContent = message;
     messagesContainer.appendChild(userMsg);
 
-    // Bot typing animation
     const botMsg = document.createElement('div');
     botMsg.classList.add('message', 'bot-message', document.body.className);
     botMsg.textContent = "Indie is typing...";
@@ -182,7 +207,7 @@
     setTimeout(() => {
       botMsg.textContent = `Hello! You said: "${message}" 😎`;
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 1000 + Math.random() * 1000);
+    }, 1000 + Math.random()*1000);
   }
 
   document.getElementById('userInput').addEventListener('keypress', function(e) {
@@ -193,12 +218,14 @@
     const body = document.body;
     const chatContainer = document.getElementById('chatContainer');
     const updateLog = document.getElementById('updateLog');
+    const subscriptionContainer = document.getElementById('subscriptionContainer');
     const newTheme = body.classList.contains('light') ? 'dark' : 'light';
 
     body.className = newTheme;
     chatContainer.className = `chat-container ${newTheme}`;
     chatContainer.querySelector('.chat-header').className = `chat-header ${newTheme}`;
     updateLog.className = `update-log-container ${newTheme}`;
+    subscriptionContainer.className = `subscription-container ${newTheme}`;
 
     document.querySelectorAll('.message').forEach(msg => {
       msg.classList.remove('light','dark');
@@ -208,8 +235,10 @@
     localStorage.setItem('theme', newTheme);
   }
 
-  function clearChat() {
-    document.getElementById('messages').innerHTML = '';
+  function clearChat() { document.getElementById('messages').innerHTML = ''; }
+
+  function subscribe(plan) {
+    alert(`Thank you for subscribing to the ${plan} plan! 🎉`);
   }
 </script>
 
