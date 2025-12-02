@@ -3,144 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Indie Chatbot</title>
+<title>Indie Chatbot - Update Log</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f2f5;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
   }
 
-  .chat-container {
-    width: 400px;
-    max-width: 90%;
-    height: 600px;
+  .update-log-container {
+    width: 90%;
+    max-width: 600px;
     background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
   }
 
-  .chat-header {
-    background: #6C63FF;
-    color: #fff;
-    padding: 15px;
+  .update-log-container h1 {
     text-align: center;
-    font-weight: bold;
+    color: #6C63FF;
+    margin-bottom: 20px;
+  }
+
+  .update-entry {
+    border-left: 4px solid #6C63FF;
+    padding: 15px 20px;
+    background: #f9f9fc;
+    border-radius: 8px;
+  }
+
+  .update-entry h2 {
+    margin: 0 0 5px 0;
     font-size: 1.2em;
+    color: #333;
   }
 
-  .chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .update-entry .date {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 10px;
   }
 
-  .message {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 20px;
-    word-wrap: break-word;
+  .update-entry ul {
+    margin: 0;
+    padding-left: 20px;
   }
 
-  .user-message {
-    align-self: flex-end;
-    background: #6C63FF;
-    color: #fff;
-  }
-
-  .bot-message {
-    align-self: flex-start;
-    background: #e5e5ea;
-    color: #000;
-  }
-
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    border-radius: 0;
-    font-size: 1em;
-  }
-
-  .chat-input button {
-    background: #6C63FF;
-    color: #fff;
-    border: none;
-    padding: 0 20px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  .chat-input button:hover {
-    background: #574bff;
+  .update-entry li {
+    margin-bottom: 5px;
   }
 </style>
 </head>
 <body>
 
-<div class="chat-container">
-  <div class="chat-header">Indie Chatbot</div>
-  <div class="chat-messages" id="messages">
-    <!-- Messages will appear here -->
+<div class="update-log-container">
+  <h1>Indie Chatbot - Update Log</h1>
+
+  <div class="update-entry">
+    <h2>Version 1.0.0 – Initial Release</h2>
+    <div class="date">2025-12-02</div>
+    <ul>
+      <li>Launched Indie Chatbot with basic text messaging functionality.</li>
+      <li>User input and bot response interface.</li>
+      <li>Clean, modern UI with scrollable chat area.</li>
+    </ul>
   </div>
-  <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Type your message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+
 </div>
-
-<script>
-  function sendMessage() {
-    const input = document.getElementById('userInput');
-    const message = input.value.trim();
-    if (message === '') return;
-
-    const messagesContainer = document.getElementById('messages');
-
-    // Add user message
-    const userMsg = document.createElement('div');
-    userMsg.classList.add('message', 'user-message');
-    userMsg.textContent = message;
-    messagesContainer.appendChild(userMsg);
-
-    // Add bot placeholder message
-    const botMsg = document.createElement('div');
-    botMsg.classList.add('message', 'bot-message');
-    botMsg.textContent = "Indie is thinking...";
-    messagesContainer.appendChild(botMsg);
-
-    // Scroll to bottom
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-    input.value = '';
-
-    // Fake bot response (for UI demonstration)
-    setTimeout(() => {
-      botMsg.textContent = "Hello! I'm Indie. How can I help you?";
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 1000);
-  }
-
-  // Allow pressing Enter to send
-  document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') sendMessage();
-  });
-</script>
 
 </body>
 </html>
