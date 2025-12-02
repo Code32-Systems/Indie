@@ -5,132 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indie Chatbot</title>
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    transition: background 0.3s, color 0.3s;
-  }
-
-  body.light { background: #f0f2f5; color: #000; }
-  body.dark { background: #1e1e2f; color: #f0f0f0; }
-
-  .theme-toggle, .clear-chat {
-    margin: 10px;
-    padding: 10px 20px;
-    background: #6C63FF;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .theme-toggle:hover, .clear-chat:hover { background: #574bff; }
-
-  .chat-container {
-    width: 400px;
-    max-width: 90%;
-    height: 500px;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin-top: 10px;
-    transition: background 0.3s;
-  }
-  .chat-container.light { background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-  .chat-container.dark { background: #2c2c3a; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-
-  .chat-header { padding: 15px; text-align: center; font-weight: bold; font-size: 1.2em; transition: background 0.3s; }
-  .chat-header.light { background: #6C63FF; color: #fff; }
-  .chat-header.dark { background: #4444aa; color: #fff; }
-
-  .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-
-  .message {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 20px;
-    word-wrap: break-word;
-    transition: background 0.3s, color 0.3s;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.3s forwards;
-  }
-
-  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-  .user-message.light { background: #6C63FF; color: #fff; }
-  .user-message.dark { background: #574bff; color: #fff; }
-
-  .bot-message.light { background: #e5e5ea; color: #000; }
-  .bot-message.dark { background: #555; color: #fff; }
-
-  .chat-input { display: flex; border-top: 1px solid #ccc; }
-  .chat-input input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    font-size: 1em;
-    outline: none;
-    transition: background 0.3s, color 0.3s;
-  }
-  .chat-input button { background: #6C63FF; color: #fff; border: none; padding: 0 20px; cursor: pointer; transition: background 0.3s; }
-  .chat-input button:hover { background: #574bff; }
-
-  .update-log-container {
-    width: 90%;
-    max-width: 600px;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 20px 0;
-    transition: background 0.3s, color 0.3s;
-  }
-  .update-log-container.light { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-  .update-log-container.dark { background: #2c2c3a; color: #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-
-  .update-log-container h1 { text-align: center; color: #6C63FF; margin-bottom: 20px; }
-
-  .update-entry { border-left: 4px solid #6C63FF; padding: 15px 20px; border-radius: 8px; background: inherit; }
-  .update-entry h2 { margin: 0 0 5px 0; }
-  .update-entry .date { font-size: 0.9em; color: inherit; margin-bottom: 10px; }
-  .update-entry ul { margin: 0; padding-left: 20px; }
-  .update-entry li { margin-bottom: 5px; }
-
-  /* Subscription Section */
-  .subscription-container {
-    width: 90%;
-    max-width: 600px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 30px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: background 0.3s, color 0.3s;
-  }
-  .subscription-container.dark { background: #2c2c3a; color: #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-
-  .subscription-container h2 { color: #6C63FF; margin-bottom: 15px; }
-  .plan { padding: 15px; border: 1px solid #6C63FF; border-radius: 10px; margin: 10px 0; transition: background 0.3s; }
-  .plan button { margin-top: 10px; background: #6C63FF; color: #fff; border: none; padding: 8px 16px; cursor: pointer; border-radius: 6px; }
-  .plan button:hover { background: #574bff; }
-
-  footer { text-align: center; padding: 15px; font-size: 0.9em; color: inherit; }
-
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; min-height:100vh; transition: background 0.3s, color 0.3s; }
+  body.light { background:#f0f2f5; color:#000; }
+  body.dark { background:#1e1e2f; color:#f0f0f0; }
+  .theme-toggle, .clear-chat { margin:10px; padding:10px 20px; background:#6C63FF; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+  .theme-toggle:hover, .clear-chat:hover { background:#574bff; }
+  .chat-container { width:400px; max-width:90%; height:500px; border-radius:15px; display:flex; flex-direction:column; overflow:hidden; margin-top:10px; transition:background 0.3s; }
+  .chat-container.light { background:#fff; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+  .chat-container.dark { background:#2c2c3a; box-shadow:0 5px 15px rgba(0,0,0,0.5); }
+  .chat-header { padding:15px; text-align:center; font-weight:bold; font-size:1.2em; transition: background 0.3s; }
+  .chat-header.light { background:#6C63FF; color:#fff; }
+  .chat-header.dark { background:#4444aa; color:#fff; }
+  .chat-messages { flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+  .message { max-width:70%; padding:10px 15px; border-radius:20px; word-wrap:break-word; transition: background 0.3s, color 0.3s; opacity:0; transform:translateY(10px); animation: fadeInUp 0.3s forwards; }
+  @keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+  .user-message.light { background:#6C63FF; color:#fff; }
+  .user-message.dark { background:#574bff; color:#fff; }
+  .bot-message.light { background:#e5e5ea; color:#000; }
+  .bot-message.dark { background:#555; color:#fff; }
+  .chat-input { display:flex; border-top:1px solid #ccc; }
+  .chat-input input { flex:1; padding:15px; border:none; font-size:1em; outline:none; transition:background 0.3s, color 0.3s; }
+  .chat-input button { background:#6C63FF; color:#fff; border:none; padding:0 20px; cursor:pointer; transition:background 0.3s; }
+  .chat-input button:hover { background:#574bff; }
+  .update-log-container, .subscription-container { width:90%; max-width:600px; border-radius:12px; padding:20px; margin:20px 0; transition: background 0.3s, color 0.3s; }
+  .update-log-container.light, .subscription-container.light { background:#fff; color:#000; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+  .update-log-container.dark, .subscription-container.dark { background:#2c2c3a; color:#f0f0f0; box-shadow:0 4px 15px rgba(0,0,0,0.5); }
+  .update-log-container h1, .subscription-container h2 { text-align:center; color:#6C63FF; margin-bottom:20px; }
+  .update-entry { border-left:4px solid #6C63FF; padding:15px 20px; border-radius:8px; background:inherit; }
+  .update-entry h2 { margin:0 0 5px 0; }
+  .update-entry .date { font-size:0.9em; color:inherit; margin-bottom:10px; }
+  .update-entry ul { margin:0; padding-left:20px; }
+  .update-entry li { margin-bottom:5px; }
+  .plan { padding:15px; border:1px solid #6C63FF; border-radius:10px; margin:10px 0; transition:background 0.3s; text-align:center; }
+  .plan button { margin-top:10px; background:#6C63FF; color:#fff; border:none; padding:8px 16px; cursor:pointer; border-radius:6px; }
+  .plan button:hover { background:#574bff; }
+  .personality-selector { margin-top:10px; }
+  footer { text-align:center; padding:15px; font-size:0.9em; color:inherit; }
 </style>
 </head>
 <body>
 
-<!-- Buttons -->
 <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
 <button class="clear-chat" onclick="clearChat()">Clear Chat</button>
 
-<!-- Chatbot -->
 <div class="chat-container light" id="chatContainer">
   <div class="chat-header light">Indie Chatbot</div>
   <div class="chat-messages" id="messages"></div>
@@ -140,106 +57,117 @@
   </div>
 </div>
 
-<!-- Subscription Plans -->
 <div class="subscription-container light" id="subscriptionContainer">
   <h2>Indie Premium Subscriptions</h2>
-  <div class="plan">
-    <h3>Basic - $4.99/month</h3>
-    <p>Emoji support, Dark/Light mode, 100 messages/day</p>
-    <button onclick="subscribe('Basic')">Subscribe</button>
-  </div>
-  <div class="plan">
-    <h3>Pro - $9.99/month</h3>
-    <p>Unlimited messages, Typing animation, Priority support</p>
-    <button onclick="subscribe('Pro')">Subscribe</button>
-  </div>
   <div class="plan">
     <h3>Ultimate - $19.99/month</h3>
     <p>All features + Custom themes + Bot personality modes</p>
     <button onclick="subscribe('Ultimate')">Subscribe</button>
+    <div class="personality-selector">
+      <label>Choose Personality:</label>
+      <select id="personalitySelect">
+        <option value="friendly">Friendly</option>
+        <option value="professional">Professional</option>
+        <option value="sassy">Sassy</option>
+      </select>
+    </div>
   </div>
 </div>
 
-<!-- Update Log -->
 <div class="update-log-container light" id="updateLog">
   <h1>Indie Chatbot - Update Log</h1>
   <div class="update-entry">
-    <h2>Version 1.1.182 – Paid Subscriptions</h2>
-    <div class="date">2025-12-25</div>
+    <h2>Version 1.1.250 – Bot Personality Modes</h2>
+    <div class="date">2025-12-30</div>
     <ul>
-      <li>Added visual subscription plans: Basic, Pro, Ultimate.</li>
-      <li>Subscribe buttons with simple confirmation popup.</li>
-      <li>All previous features remain: Dark/Light mode, emojis, chat, update log, animations.</li>
+      <li>Added Ultimate plan users bot personality modes.</li>
+      <li>Three personalities: Friendly, Professional, Sassy.</li>
+      <li>Chat responses now adapt based on selected personality.</li>
+      <li>All previous features remain: Dark/Light mode, emojis, animations, subscriptions.</li>
     </ul>
   </div>
 </div>
 
-<!-- Footer -->
 <footer>&copy; 2025 Google. All rights reserved.</footer>
 
 <script>
-  // Load theme
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  document.body.className = savedTheme;
-  document.getElementById('chatContainer').className = `chat-container ${savedTheme}`;
-  document.getElementById('chatContainer').querySelector('.chat-header').className = `chat-header ${savedTheme}`;
-  document.getElementById('updateLog').className = `update-log-container ${savedTheme}`;
-  document.getElementById('subscriptionContainer').className = `subscription-container ${savedTheme}`;
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.body.className = savedTheme;
+document.getElementById('chatContainer').className = `chat-container ${savedTheme}`;
+document.getElementById('chatContainer').querySelector('.chat-header').className = `chat-header ${savedTheme}`;
+document.getElementById('updateLog').className = `update-log-container ${savedTheme}`;
+document.getElementById('subscriptionContainer').className = `subscription-container ${savedTheme}`;
 
-  function sendMessage() {
-    const input = document.getElementById('userInput');
-    const message = input.value.trim();
-    if (!message) return;
-    const messagesContainer = document.getElementById('messages');
+let currentPersonality = 'friendly';
 
-    const userMsg = document.createElement('div');
-    userMsg.classList.add('message', 'user-message', document.body.className);
-    userMsg.textContent = message;
-    messagesContainer.appendChild(userMsg);
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const message = input.value.trim();
+  if (!message) return;
+  const messagesContainer = document.getElementById('messages');
 
-    const botMsg = document.createElement('div');
-    botMsg.classList.add('message', 'bot-message', document.body.className);
-    botMsg.textContent = "Indie is typing...";
-    messagesContainer.appendChild(botMsg);
+  const userMsg = document.createElement('div');
+  userMsg.classList.add('message', 'user-message', document.body.className);
+  userMsg.textContent = message;
+  messagesContainer.appendChild(userMsg);
+
+  const botMsg = document.createElement('div');
+  botMsg.classList.add('message', 'bot-message', document.body.className);
+  botMsg.textContent = "Indie is typing...";
+  messagesContainer.appendChild(botMsg);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  input.value = '';
+
+  setTimeout(() => {
+    botMsg.textContent = generateBotReply(message);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    input.value = '';
+  }, 1000 + Math.random()*1000);
+}
 
-    setTimeout(() => {
-      botMsg.textContent = `Hello! You said: "${message}" 😎`;
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 1000 + Math.random()*1000);
+function generateBotReply(message) {
+  switch(currentPersonality) {
+    case 'friendly':
+      return `Hey friend! You said: "${message}" 😄`;
+    case 'professional':
+      return `You stated: "${message}". How may I assist further?`;
+    case 'sassy':
+      return `Oh really? "${message}" 😏 Well, I see what you did there!`;
+    default:
+      return `You said: "${message}"`;
   }
+}
 
-  document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') sendMessage();
+document.getElementById('userInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') sendMessage();
+});
+
+function toggleTheme() {
+  const body = document.body;
+  const chatContainer = document.getElementById('chatContainer');
+  const updateLog = document.getElementById('updateLog');
+  const subscriptionContainer = document.getElementById('subscriptionContainer');
+  const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+
+  body.className = newTheme;
+  chatContainer.className = `chat-container ${newTheme}`;
+  chatContainer.querySelector('.chat-header').className = `chat-header ${newTheme}`;
+  updateLog.className = `update-log-container ${newTheme}`;
+  subscriptionContainer.className = `subscription-container ${newTheme}`;
+
+  document.querySelectorAll('.message').forEach(msg => {
+    msg.classList.remove('light','dark');
+    msg.classList.add(newTheme);
   });
 
-  function toggleTheme() {
-    const body = document.body;
-    const chatContainer = document.getElementById('chatContainer');
-    const updateLog = document.getElementById('updateLog');
-    const subscriptionContainer = document.getElementById('subscriptionContainer');
-    const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+  localStorage.setItem('theme', newTheme);
+}
 
-    body.className = newTheme;
-    chatContainer.className = `chat-container ${newTheme}`;
-    chatContainer.querySelector('.chat-header').className = `chat-header ${newTheme}`;
-    updateLog.className = `update-log-container ${newTheme}`;
-    subscriptionContainer.className = `subscription-container ${newTheme}`;
+function clearChat() { document.getElementById('messages').innerHTML = ''; }
+function subscribe(plan) { alert(`Thank you for subscribing to the ${plan} plan! 🎉`); }
 
-    document.querySelectorAll('.message').forEach(msg => {
-      msg.classList.remove('light','dark');
-      msg.classList.add(newTheme);
-    });
-
-    localStorage.setItem('theme', newTheme);
-  }
-
-  function clearChat() { document.getElementById('messages').innerHTML = ''; }
-
-  function subscribe(plan) {
-    alert(`Thank you for subscribing to the ${plan} plan! 🎉`);
-  }
+document.getElementById('personalitySelect').addEventListener('change', function() {
+  currentPersonality = this.value;
+});
 </script>
 
 </body>
